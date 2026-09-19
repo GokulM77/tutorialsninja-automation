@@ -18,9 +18,14 @@ public class DriverManager {
         return driver.get();
     }
 
-    public static void removeDriver()
-    {
-        driver.get().quit();
+    public static void removeDriver() {
+        if (driver.get() != null) {
+            try {
+                driver.get().quit();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
         driver.remove();
     }
 }
