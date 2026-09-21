@@ -1,5 +1,6 @@
 package framework.base;
 
+import framework.config.ConfigManager;
 import framework.driver.BrowserType;
 import framework.driver.DriverFactory;
 import framework.driver.DriverManager;
@@ -8,20 +9,13 @@ import org.testng.annotations.BeforeMethod;
 
 public class BaseTest {
 
-    // TODO: Phase 4 — replace with ConfigManager.getBrowser() once config layer exists
-    private static final BrowserType DEFAULT_BROWSER = BrowserType.CHROME;
-    // TODO: Phase 4 — replace with ConfigManager.getBaseUrl() once config layer exists
-    private static final String BASE_URL = "https://tutorialsninja.com/demo/index.php?route=common/home";
-    //TODO: Phase 16 — replace with retryAnalyser
-    int maxAttempt = 2;
-
         @BeforeMethod
         public void setUp ()
-        {   //TODO: Phase 16 — replace with retryAnalyser
-            for(int attempt =1; attempt <=maxAttempt; attempt ++) {
+        {   //TODO: This try catch block is used to handle flaky browser initialisation using a retry logic
+            for(int attempt =1; attempt <=ConfigManager.getMaxAttempt(); attempt ++) {
                try{
-                DriverManager.setDriver(DriverFactory.createDriver(DEFAULT_BROWSER));
-                DriverManager.getDriver().get(BASE_URL);
+                DriverManager.setDriver(DriverFactory.createDriver(ConfigManager.getBrowser()));
+                DriverManager.getDriver().get(ConfigManager.getBaseUrl());
                 return;
         } catch (Exception e) {
                    System.out.println("Attempt " + attempt + " failed: " + e.getMessage());
@@ -35,7 +29,7 @@ public class BaseTest {
                 } finally { DriverManager.removeDriver();
                 }
 
-                if (attempt == maxAttempt) {
+                if (attempt == ConfigManager.getMaxAttempt()) {
                     throw e;
                 }
             }
