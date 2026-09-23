@@ -43,4 +43,20 @@ public class ConfigManager {
         String value = System.getProperty("browser", properties.getProperty("browser"));
         return BrowserType.valueOf(value.toUpperCase());
     }
+
+    public static String getValidEmail() {
+        String value = System.getenv("TN_VALID_EMAIL");
+        if (value == null) {
+            throw new RuntimeException("TN_VALID_EMAIL environment variable not set");
+        }
+        return value;
+    }
+
+    public static String getValidPassword() {
+        String value = System.getenv("TN_VALID_PASSWORD");
+        if (value == null) {
+            throw new RuntimeException("TN_VALID_PASSWORD environment variable not set");
+        }
+        return value;
+    }
 }

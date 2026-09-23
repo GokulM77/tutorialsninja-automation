@@ -9,4 +9,7 @@ public class TestDataUtils {
     public static String generateRandomEmail() {
         return "invalid_" + System.currentTimeMillis() + "@test.com";
     }
+    public static String generateRandomPassword() {
+        return "P@s_" + System.currentTimeMillis();
+    }
 }
