@@ -1,0 +1,11 @@
+<suite name="Suite">
+    <listeners>
+        <listener class-name="framework.listeners.TestListener"/>
+    </listeners>
+    <test name="Test">
+        <classes>
+            <class name="tests.HomeTest"/>
+            <class name="tests.LoginTest"/>
+        </classes>
+    </test>
+</suite>

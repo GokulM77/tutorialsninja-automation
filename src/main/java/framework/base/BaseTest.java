@@ -1,12 +1,14 @@
 package framework.base;
 
 import framework.config.ConfigManager;
-import framework.driver.BrowserType;
 import framework.driver.DriverFactory;
 import framework.driver.DriverManager;
+import framework.listeners.TestListener;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 
+@Listeners(TestListener.class)
 public class BaseTest {
 
         @BeforeMethod
