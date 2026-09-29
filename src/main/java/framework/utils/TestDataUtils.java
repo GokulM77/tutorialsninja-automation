@@ -7,7 +7,7 @@ public class TestDataUtils {
     }
 
     public static String generateRandomEmail() {
-        return "invalid_" + System.currentTimeMillis() + "@test.com";
+        return "invalid_" + java.util.UUID.randomUUID().toString().substring(0, 8) + "@test.com";
     }
     public static String generateRandomPassword() {
         return "P@s_" + System.currentTimeMillis();
