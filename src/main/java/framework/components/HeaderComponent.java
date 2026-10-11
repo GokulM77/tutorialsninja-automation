@@ -1,6 +1,7 @@
 package framework.components;
 
 import framework.base.BasePage;
+import framework.pages.CartPage;
 import framework.pages.LoginPage;
 import org.openqa.selenium.By;
 
@@ -10,6 +11,7 @@ public class HeaderComponent extends BasePage {
     private By searchBoxLocator = By.name("search");
     private By myAccountLocator = By.cssSelector("a[title='My Account']");
     private By accountLoginLocator = By.xpath("//a[text()='Login']");
+    private By shoppingCartLocator = By.cssSelector("a[title='Shopping Cart']");
 
     public boolean isLogoDisplayed() {
         return isDisplayed(logoLocator);
@@ -35,5 +37,10 @@ public class HeaderComponent extends BasePage {
         click(myAccountLocator);
         click(accountLoginLocator);
         return new LoginPage();
+    }
+
+    public CartPage navigateToShoppingCart() {
+        click(shoppingCartLocator);
+        return new CartPage();
     }
 }

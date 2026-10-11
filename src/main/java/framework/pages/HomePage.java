@@ -2,10 +2,12 @@ package framework.pages;
 
 import framework.base.BasePage;
 import framework.components.HeaderComponent;
+import framework.components.NavigationComponent;
 
 public class HomePage extends BasePage {
 
     private HeaderComponent header = new HeaderComponent();
+    private NavigationComponent navigation = new NavigationComponent();
 
     public boolean isLogoDisplayed() { return header.isLogoDisplayed(); }
 
@@ -20,4 +22,10 @@ public class HomePage extends BasePage {
     }
 
     public LoginPage navigateToLoginPage() { return header.navigateToLoginPage();}
+
+    public CategoryPage navigateToComponents() { return navigation.navigateToComponents();}
+
+    public CategoryPage navigateToPhones() { return navigation.navigateToPhones();}
+
+    public CartPage navigateToShoppingCart() { return header.navigateToShoppingCart();}
 }
