@@ -22,5 +22,13 @@ public class CartTest extends BaseTest {
         BigDecimal total = cart.getProductTotals().stream()
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         Assert.assertEquals(total.compareTo(cart.getDisplayedTotal()), 0, "Total doesn't match");
+
+        //Validating if price is recalculated based on new shipping details
+        cart.clickEstimateShippingTaxButton().selectCountry("India").selectRegion("Karnataka").enterPostCode("1234").getQuotes();
+        cart.selectAndApplyShipping();
+
+        BigDecimal updatedTotal = cart.getProductTotals().stream()
+                .reduce(cart.getFlatShippingRate(), BigDecimal::add);
+        Assert.assertEquals(updatedTotal.compareTo(cart.getDisplayedTotal()), 0, "Updated Total doesn't match");
     }
 }
