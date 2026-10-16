@@ -1,17 +1,20 @@
 package tests;
 
 import framework.base.BaseTest;
+import framework.listeners.RetryAnalyzer;
 import framework.pages.CartPage;
 import framework.pages.CategoryPage;
 import framework.pages.HomePage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import static constant.TestGroup.SMOKE;
+import static constant.TestGroup.REGRESSION;
 
 import java.math.BigDecimal;
 
 public class CartTest extends BaseTest {
 
-    @Test
+    @Test(groups = {SMOKE,REGRESSION},retryAnalyzer = RetryAnalyzer.class)
     public void validateShoppingCart() {
         CategoryPage categoryPage = new HomePage().navigateToPhones();
         categoryPage.addFirstProductToCart(1);

@@ -9,6 +9,8 @@ import framework.utils.TestDataUtils;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import static constant.TestGroup.REGRESSION;
+import static constant.TestGroup.SMOKE;
 
 public class LoginTest extends BaseTest {
 
@@ -22,7 +24,7 @@ public class LoginTest extends BaseTest {
         };
     }
 
-    @Test
+    @Test(groups = {SMOKE,REGRESSION})
     public void verifyValidLogin() {
         LoginPage loginPage = new HomePage().navigateToLoginPage();
         MyAccountPage myAccountPage = loginPage.loginWithValidCredentials(ConfigManager.getValidEmail(), ConfigManager.getValidPassword());
@@ -30,7 +32,7 @@ public class LoginTest extends BaseTest {
         Assert.assertEquals(myAccountPage.myAccountHeader(),"My Account");
     }
 
-    @Test(dataProvider = "invalidLoginData")
+    @Test(dataProvider = "invalidLoginData", groups = REGRESSION)
     public void verifyInvalidLogin(String email, String password) {
         LoginPage loginPage = new HomePage().navigateToLoginPage();
         loginPage.loginWithInvalidCredentials(email, password);

@@ -11,7 +11,7 @@ import org.testng.annotations.Listeners;
 @Listeners(TestListener.class)
 public class BaseTest {
 
-        @BeforeMethod
+        @BeforeMethod(alwaysRun = true)
         public void setUp ()
         {   //TODO: This try catch block is used to handle flaky browser initialisation using a retry logic
             for(int attempt =1; attempt <=ConfigManager.getMaxAttempt(); attempt ++) {
@@ -38,7 +38,7 @@ public class BaseTest {
         }
     }
 
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDown()
     {
         DriverManager.removeDriver();

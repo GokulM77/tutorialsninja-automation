@@ -5,16 +5,17 @@ import framework.pages.CategoryPage;
 import framework.pages.HomePage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import static constant.TestGroup.REGRESSION;
 
 public class CategoryTest extends BaseTest {
 
-    @Test
+    @Test(groups = REGRESSION)
     public void validateComponentSection() {
         CategoryPage categoryPage = new HomePage().navigateToComponents();
         verifySortingWorks(categoryPage);
     }
 
-    @Test
+    @Test(groups = REGRESSION)
     public void validatePhoneSection() {
         CategoryPage categoryPage = new HomePage().navigateToPhones();
         verifySortingWorks(categoryPage);

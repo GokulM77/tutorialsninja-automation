@@ -89,7 +89,9 @@ public class TestListener implements ITestListener {
     public void onTestSkipped(ITestResult result) {
         try {
             ExtentTest test = currentTest(result);
-            if(result.getThrowable() != null) {
+            if (result.wasRetried()) {
+                test.skip("Attempt failed and was retried: " + result.getThrowable());
+            }else if(result.getThrowable() != null) {
                 test.skip(result.getThrowable());
             } else {
                 test.skip("Test Skipped");
