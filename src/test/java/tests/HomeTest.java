@@ -1,7 +1,6 @@
 package tests;
 
 import framework.base.BaseTest;
-import framework.driver.DriverManager;
 import framework.pages.HomePage;
 import org.testng.Assert;
 import org.testng.annotations.Test;

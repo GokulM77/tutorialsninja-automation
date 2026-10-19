@@ -52,7 +52,7 @@ public class TestListener implements ITestListener {
         //To check which thread screenshot is picked up during parallel run
         System.out.println("[FAILURE] " + result.getMethod().getMethodName() + " on thread " + Thread.currentThread().threadId());
         //common name used for both report and screenshot
-        String screenshotFileName = result.getMethod().getMethodName() + result.getStartMillis() + ".png";
+        String screenshotFileName = result.getMethod().getMethodName() + Thread.currentThread().threadId() + result.getStartMillis() + ".png";
         // "../" to get into target directory
         String relativePathToScreenshot = "../screenshots/" + screenshotFileName;
         boolean screenshotAttached = false;
