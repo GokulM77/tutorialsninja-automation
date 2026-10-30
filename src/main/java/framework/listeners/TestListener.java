@@ -1,19 +1,14 @@
 package framework.listeners;
 
 import java.lang.reflect.Parameter;
-import java.nio.file.Files;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
-import framework.driver.DriverManager;
 import framework.reporting.ReportManager;
+import framework.utils.ScreenshotUtils;
 import framework.utils.SensitiveDataMasker;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
-import java.io.File;
-import java.nio.file.StandardCopyOption;
 
 public class TestListener implements ITestListener {
 
@@ -26,15 +21,26 @@ public class TestListener implements ITestListener {
         return test;
     }
 
-    @Override
-    public void onTestStart(ITestResult result) {
+    private String displayName(ITestResult result) {
         String name = result.getMethod().getMethodName();
         Object[] params = result.getParameters();
-        if (params.length > 0) {
-            Parameter[] declared = result.getMethod().getConstructorOrMethod().getMethod().getParameters();
-            name += " [" + SensitiveDataMasker.describe(declared, params) + "]";
+        if (params.length == 0) {
+            return name;
         }
-        ReportManager.createTest(name);
+
+        // Cucumber runner: the first parameter is the scenario. Matched by class name so
+        // src/main never imports Cucumber.
+        if (params[0] != null && params[0].getClass().getName().startsWith("io.cucumber.")) {
+            return String.valueOf(params[0]).replaceAll("^\"|\"$", ""); // strip the surrounding quotes
+        }
+
+        Parameter[] declared = result.getMethod().getConstructorOrMethod().getMethod().getParameters();
+        return name + " [" + SensitiveDataMasker.describe(declared, params) + "]";
+    }
+
+    @Override
+    public void onTestStart(ITestResult result) {
+        ReportManager.createTest(displayName(result));
     }
 
     @Override
@@ -48,34 +54,22 @@ public class TestListener implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult result) {
+        System.out.println("[FAILURE] " + result.getMethod().getMethodName()+ " on thread " + Thread.currentThread().threadId());
 
-        //To check which thread screenshot is picked up during parallel run
-        System.out.println("[FAILURE] " + result.getMethod().getMethodName() + " on thread " + Thread.currentThread().threadId());
-        //common name used for both report and screenshot
-        String screenshotFileName = result.getMethod().getMethodName() + Thread.currentThread().threadId() + result.getStartMillis() + ".png";
-        // "../" to get into target directory
-        String relativePathToScreenshot = "../screenshots/" + screenshotFileName;
-        boolean screenshotAttached = false;
-
-        try {
-            File screenshot = ((TakesScreenshot)DriverManager.getDriver()).getScreenshotAs(OutputType.FILE);
-
-            File targetFile = new File("./target/screenshots/" + screenshotFileName);
-            Files.createDirectories(targetFile.getParentFile().toPath());
-            Files.copy(screenshot.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-            screenshotAttached = true;
-
-        } catch (Exception e) {
-            System.err.println("[WARN] Failed to capture screenshot " + screenshotFileName + " due to: " + e.getMessage());
+        //Cucumber's @After hook runs before this callback and has already captured, so check that first.
+        String screenshotPath = ScreenshotUtils.consumeStoredPath();
+        if (screenshotPath == null) {
+            //TestNG native tests: the driver is still alive here (@AfterMethod hasn't run yet).
+            String fileName = result.getMethod().getMethodName()
+                    + Thread.currentThread().threadId() + result.getStartMillis() + ".png";
+            screenshotPath = ScreenshotUtils.capture(fileName);
         }
 
         try {
             ExtentTest test = currentTest(result);
-
-            if (screenshotAttached) {
-                //attaching screenshot to report
-                test.fail(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromPath(relativePathToScreenshot).build());
+            if (screenshotPath != null) {
+                test.fail(result.getThrowable(),
+                        MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
             } else {
                 test.fail(result.getThrowable());
                 test.info("Note: Screenshot Unavailable.");
@@ -89,6 +83,8 @@ public class TestListener implements ITestListener {
     public void onTestSkipped(ITestResult result) {
         try {
             ExtentTest test = currentTest(result);
+            //Override plain fallback name with parameter masked name
+            test.getModel().setName(displayName(result));
             if (result.wasRetried()) {
                 test.skip("Attempt failed and was retried: " + result.getThrowable());
             }else if(result.getThrowable() != null) {
@@ -96,7 +92,7 @@ public class TestListener implements ITestListener {
             } else {
                 test.skip("Test Skipped");
             }
-            } finally {
+        } finally {
             ReportManager.unload();
         }
     }

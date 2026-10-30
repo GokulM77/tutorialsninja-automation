@@ -28,11 +28,11 @@ public class ReportManager {
     }
 
     public static void flush() {
-            try{
-                extentReports.flush();
-            } catch (Exception e) {
-                System.err.println("[WARN] Failed to flush Extent Report" + e.getMessage());
-            }
+        try{
+            extentReports.flush();
+        } catch (Exception e) {
+            System.err.println("[WARN] Failed to flush Extent Report" + e.getMessage());
+        }
     }
 
     public static void unload() { extentTest.remove(); }

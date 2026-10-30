@@ -8,6 +8,7 @@
             <class name="tests.LoginTest"/>
             <class name="tests.CategoryTest"/>
             <class name="tests.CartTest"/>
+            <class name="runners.TestRunner"/>
         </classes>
     </test>
 </suite>

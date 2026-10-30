@@ -13,6 +13,7 @@
         <maven.compiler.target>26</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.parameters>true</maven.compiler.parameters>
+        <cucumber.version>7.34.9</cucumber.version>
     </properties>
 
     <dependencies>
@@ -33,6 +34,20 @@
             <artifactId>extentreports</artifactId>
             <version>5.1.2</version>
             <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
