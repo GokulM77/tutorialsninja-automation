@@ -59,4 +59,10 @@ public class ConfigManager {
         }
         return value;
     }
+
+    //Headless mode check primarily for CI/CD
+    public static boolean isHeadless() {
+        String override = System.getProperty("headless");
+        return override != null ? Boolean.parseBoolean(override) : Boolean.parseBoolean(properties.getProperty("headless", "false"));
+    }
 }

@@ -1,0 +1,35 @@
+name: smoke
+
+on:
+  workflow_dispatch:        # manual trigger only, for now
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Run smoke tests (TestNG smoke group + Cucumber @smoke, headless)
+        env:
+          TN_VALID_EMAIL: ${{ secrets.TN_VALID_EMAIL }}
+          TN_VALID_PASSWORD: ${{ secrets.TN_VALID_PASSWORD }}
+        run: mvn -B test -Dgroups=smoke,cucumber -Dcucumber.filter.tags=@smoke -Dheadless=true
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-evidence
+          path: |
+            target/reports
+            target/screenshots
+            target/surefire-reports
