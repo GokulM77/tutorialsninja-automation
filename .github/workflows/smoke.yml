@@ -1,7 +1,11 @@
 name: smoke
 
 on:
-  workflow_dispatch:        # manual trigger only, for now
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
 
 permissions:
   contents: read
